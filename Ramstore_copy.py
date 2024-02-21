@@ -1,6 +1,6 @@
 import pyodbc
 import pandas as pd
-from Config import server,db,uid,pwd
+from Config import *
 
 
 connDBR = pyodbc.connect(f'Driver=SQL Server;Server={server};Port =1433;Database={db};UID={uid};PWD={pwd}')
@@ -36,7 +36,7 @@ query = """SELECT
   ON RK1.[ORDERNAME]=RK2.[ORDERNAME]
   WHERE CAST(RK1.[SHIFTDATE] as date) = DATEADD(day,-1,CAST(Getdate() as date));"""
 df = pd.read_sql(query, connDBR)
-connDB = pyodbc.connect(r'Driver={SQL Server};Server=HOME-PC;Database=PowerBi;Trusted_Connection=yes;')
+connDB = pyodbc.connect(f'Driver=SQL Server;Server={SERVER};Database={DB};Trusted_Connection=yes;')
 cursor = connDB.cursor()
 for index, row in df.iterrows():
      cursor.execute("INSERT INTO Ramstore_Sales (Fact_Date,Restaurant,Order_Category,Open_Date,Open_Time,Close_Date,Close_Time,Main_Waiter,Invoice,Path_Category,Last_Folder,Category,Code_Dish,Dish,Quantity,Price,Sum_,Tax,Total_Sum,Combo,Currency_Type,Currency,Food_Bar_Category,Table_Num,Guest_Count) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",row.Fact_Date, row.Restaurant, row.Order_Category, row.Open_Date, row.Open_Time,row.Close_Date,row.Close_Time,row.Main_Waiter,row.Invoice,row.Path_Category,row.Last_Folder,row.Category,row.Code_Dish,row.Dish,row.Quantity,row.Price,row.Sum_,row.Tax,row.Total_Sum,row.Combo,row.Currency_Type,row.Currency,row.Food_Bar_Category,row.Table_Num,row.Guest_Count)
